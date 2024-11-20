@@ -54,7 +54,7 @@ The dataset is automatically downloaded at the start of the Jupyter Notebook.
    - Generate classification reports and visualize confusion matrices.
 
 4. **Deployment**:
-   - Deploy the model as a web service using Flask (or BentoML).
+   - Deploy the model as a web service using Flask.
    - Containerize the service using Docker for portability.
    - Optionally deploy the service to the cloud for public access.
 
@@ -154,6 +154,49 @@ The API should respond with a JSON object containing the predicted label. For ex
     "true_label": "pants-fire",
     "correct": true
 }
+```
+### **Using the AWS CLI for Docker Image Management**
+
+This subsection explains how to set up the AWS CLI on Arch Linux, push the Docker image to Amazon ECR Public, and retrieve the image locally.
+
+#### **Step 1: Install the AWS CLI**
+On Arch Linux, you can install the AWS CLI using the `aws-cli` package:
+```bash
+yay -S aws-cli
+```
+
+#### **Step 2: Configure the AWS CLI**
+Set up the AWS CLI with your credentials and default region:
+```bash
+aws configure
+```
+You will be prompted to enter:
+- **AWS Access Key ID**
+- **AWS Secret Access Key**
+
+Ensure that your AWS credentials are valid and the required permissions are assigned to your user account for ECR Public operations.
+
+#### **Step 3: Upload the Docker Image**
+Use the provided `upload_to_ecr.sh` script to push the Docker image to Amazon ECR Public:
+```bash
+./upload_to_ecr.sh
+```
+Ensure that the `upload_to_ecr.sh` script is executable:
+```bash
+chmod +x upload_to_ecr.sh
+```
+
+The image is publicly available and does not require authentication for pulling.
+
+#### **Step 4: Retrieve the Docker Image**
+To pull the Docker image from Amazon ECR Public to your local Docker installation, use the following command:
+```bash
+docker pull public.ecr.aws/t8q6o3x2/tuamnuq-liar-detect-app:latest
+```
+
+The image will now be available locally and can be verified using:
+```bash
+docker images
 ```
 
 ## **Project Structure**

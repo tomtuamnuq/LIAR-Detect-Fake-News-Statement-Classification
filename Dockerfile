@@ -4,14 +4,17 @@ FROM python:3.12-slim
 # Set the working directory
 WORKDIR /app
 
-# Copy Pipfile and Pipfile.lock
+# Copy Pipfile
 COPY Pipfile Pipfile.lock /app/
 
-# Install pipenv
-RUN pip install pipenv
-
-# Install dependencies
-RUN pipenv install --deploy --system
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential && \
+    pip install --upgrade pip --no-cache-dir && \
+    pip install pipenv --no-cache-dir && \
+    pipenv install --deploy && \
+    apt-get remove -y build-essential && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy the src directory and models directory
 COPY ./src /app/src

@@ -1,0 +1,11 @@
+{
+    "description": "This repository contains the Docker image for LIAR-Detect, a machine learning-based fake news statement classification project. The image includes a Flask API for inference.",
+    "architectures": [
+        "x86_64"
+    ],
+    "operatingSystems": [
+        "Linux"
+    ],
+    "aboutText": "This repository hosts the container image for LIAR-Detect, a tool for classifying political statements based on their truthfulness levels. It uses a trained XGBoost model for predictions.",
+    "usageText": "Use this container image to deploy the LIAR-Detect API in your environment. Clone the project for more details."
+}

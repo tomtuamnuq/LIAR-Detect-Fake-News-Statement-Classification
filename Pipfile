@@ -6,8 +6,6 @@ name = "pypi"
 [packages]
 pandas = "*"
 numpy = "*"
-matplotlib = "*"
-seaborn = "*"
 scikit-learn = "*"
 scipy = "*"
 gunicorn = "*"
@@ -20,6 +18,9 @@ pydantic = "*"
 [dev-packages]
 jupyterlab = "*"
 pytest = "*"
+matplotlib = "*"
+seaborn = "*"
+black = "*"
 
 [requires]
 python_version = "3.12"
