@@ -1,15 +1,15 @@
 import pandas as pd
 import pickle
 from xgboost import XGBClassifier
-import os
 
-from common_feature import COLUMN_NAMES, FeatureEngineer
-
-# File paths
-DATA_DIR = os.path.join(os.pardir, "data")
-MODEL_DIR = os.path.join(os.pardir, "models")
-TRAIN_FILE = os.path.join(DATA_DIR, "train.tsv")
-TEST_FILE = os.path.join(DATA_DIR, "test.tsv")
+from common_feature import (
+    COLUMN_NAMES,
+    FEATUREENGINEER_FILE,
+    MODEL_FILE,
+    TEST_FILE,
+    TRAIN_FILE,
+    FeatureEngineer,
+)
 
 
 # Main Script
@@ -42,9 +42,9 @@ def main():
     model.fit(X_combined, y_combined)
 
     # Save the model and encoders
-    with open(os.path.join(MODEL_DIR, "feature_engineer.pkl"), "wb") as f:
+    with open(FEATUREENGINEER_FILE, "wb") as f:
         pickle.dump(feature_engineer, f)
-    with open(os.path.join(MODEL_DIR, "xgboost_model.pkl"), "wb") as f:
+    with open(MODEL_FILE, "wb") as f:
         pickle.dump(model, f)
     print("Feature Engineer and Model saved successfully!")
 

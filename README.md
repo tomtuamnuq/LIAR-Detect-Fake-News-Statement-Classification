@@ -83,10 +83,44 @@ The dataset is automatically downloaded at the start of the Jupyter Notebook.
    pipenv install
    ```
 
-3. Launch the Jupyter Notebook with the correct working directory:
+3. Activate the Pipenv shell in the project root:
    ```bash
-   pipenv run jupyter lab --notebook-dir=notebooks
+   pipenv shell
    ```
+
+4. Launch the Jupyter Notebook (if needed) with the correct working directory:
+   ```bash
+   jupyter lab --notebook-dir=notebooks
+   ```
+
+5. Execute at least the first cell of the Jupyter Notebook to load the dataset into the `data` directory.
+---
+
+### **Training the Model**
+
+To train the model, use the `train.py` script located in the `src` directory. This will preprocess the data, train the model, and save the required pickle files (`feature_engineer.pkl` and `xgboost_model.pkl`) in the `models` directory. Ensure that the `train.tsv` and `test.tsv` files exist in the `data` directory before training!
+
+Run the training script:
+```bash
+python src/train.py
+```
+
+Once complete, the `models/` directory will contain the following:
+- `feature_engineer.pkl`: The pickled feature engineering pipeline.
+- `xgboost_model.pkl`: The trained XGBoost model.
+
+---
+
+### **Testing the Python implementation**
+
+To test the trained model inference implementation, use `pytest` to run the tests in the `tests` directory. These tests verify model inference, schema validation, and the prediction pipeline.
+
+Run the tests:
+```bash
+pytest tests
+```
+
+Make sure that the trained model files (`feature_engineer.pkl` and `xgboost_model.pkl`) exist in the `models` directory before running the tests.
 
 ---
 
@@ -95,21 +129,33 @@ The dataset is automatically downloaded at the start of the Jupyter Notebook.
 ```
 LIAR-Detect/
 │
-├── data/                # Auto-downloaded dataset
+├── data/                # Dataset directory
+│   ├── train.tsv        # Training data
+│   ├── test.tsv         # Test data
+│
+├── models/              # Model and pipeline directory
+│   ├── feature_engineer.pkl
+│   ├── xgboost_model.pkl
 │
 ├── notebooks/
-│   └── notebook.ipynb  # Main notebook for data preparation, EDA, and model selection
+│   └── notebook.ipynb   # Main notebook for data preparation, EDA, and model selection
 │
-├── src/
-│   ├── train.py        # Script to train the final model
-│   ├── predict.py      # Script to serve predictions via a web service
+├── src/                 # Source code directory
+│   ├── common_feature.py # Shared utilities and paths
+│   ├── train.py         # Script to train the final model
+│   ├── predict.py       # Script to serve predictions via a web service
 │
-├── Dockerfile          # Docker configuration
-├── Pipfile             # Dependency management using Pipenv
-├── Pipfile.lock        # Lockfile for reproducibility
-├── README.md           # Project documentation
-└── .gitignore          # Ignored files and directories
-
+├── tests/               # Test suite directory
+│   ├── test_inference.py # Pytest for inference pipeline
+│   ├── test_single_false.json  # Test input JSON with false label
+│   ├── test_single_mtrue.json  # Test input JSON with mostly-true label
+│
+├── Dockerfile           # Docker configuration
+├── Pipfile              # Dependency management using Pipenv
+├── Pipfile.lock         # Lockfile for reproducibility
+├── pyproject.toml       # Pytest configuration
+├── README.md            # Project documentation
+└── .gitignore           # Ignored files and directories
 ```
 
 ---

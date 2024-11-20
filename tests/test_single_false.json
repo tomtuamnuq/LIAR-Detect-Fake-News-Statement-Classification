@@ -1,0 +1,16 @@
+{
+    "ID": "12996",
+    "Label": "pants-fire",
+    "Statement": "The number of illegal immigrants could be 3 million. It could be 30 million.",
+    "Subject": "immigration",
+    "Speaker": "donald-trump",
+    "Speaker_Job_Title": "President-Elect",
+    "State_Info": "New York",
+    "Party_Affiliation": "republican",
+    "Barely_True_Counts": 63,
+    "False_Counts": 114,
+    "Half_True_Counts": 51,
+    "Mostly_True_Counts": 37,
+    "Pants_on_Fire_Counts": 61,
+    "Context": "a speech in Phoenix, Ariz."
+}

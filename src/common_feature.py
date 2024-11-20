@@ -2,6 +2,19 @@
 import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer, OneHotEncoder
 from sklearn.feature_extraction.text import TfidfVectorizer
+import os
+
+# File paths
+# Get the absolute path of the current directory (where common_feature.py is located)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Paths relative to the src directory
+DATA_DIR = os.path.join(BASE_DIR, "../data")
+MODEL_DIR = os.path.join(BASE_DIR, "../models")
+TRAIN_FILE = os.path.join(DATA_DIR, "train.tsv")
+TEST_FILE = os.path.join(DATA_DIR, "test.tsv")
+FEATUREENGINEER_FILE = os.path.join(MODEL_DIR, "feature_engineer.pkl")
+MODEL_FILE = os.path.join(MODEL_DIR, "xgboost_model.pkl")
 
 COLUMN_NAMES = [
     "ID",
@@ -9,23 +22,23 @@ COLUMN_NAMES = [
     "Statement",
     "Subject",
     "Speaker",
-    "Speaker Job Title",
-    "State Info",
-    "Party Affiliation",
-    "Barely True Counts",
-    "False Counts",
-    "Half True Counts",
-    "Mostly True Counts",
-    "Pants on Fire Counts",
+    "Speaker_Job_Title",
+    "State_Info",
+    "Party_Affiliation",
+    "Barely_True_Counts",
+    "False_Counts",
+    "Half_True_Counts",
+    "Mostly_True_Counts",
+    "Pants_on_Fire_Counts",
     "Context",
 ]
 
 NUMERICAL_FEATURES = [
-    "Barely True Counts",
-    "False Counts",
-    "Half True Counts",
-    "Mostly True Counts",
-    "Pants on Fire Counts",
+    "Barely_True_Counts",
+    "False_Counts",
+    "Half_True_Counts",
+    "Mostly_True_Counts",
+    "Pants_on_Fire_Counts",
 ]
 
 LABEL_ORDER = [
@@ -125,7 +138,7 @@ class FeatureEngineer:
                 self.fit_subject_column(df),
                 self.fit_categorical_column("Speaker", df, self.speaker_encoder),
                 self.fit_categorical_column(
-                    "Party Affiliation", df, self.party_encoder
+                    "Party_Affiliation", df, self.party_encoder
                 ),
                 self.fit_text_column("Statement", df, self.statement_vectorizer),
                 self.fit_text_column("Context", df, self.context_vectorizer),
@@ -166,8 +179,8 @@ class FeatureEngineer:
         )
 
         party_features = pd.DataFrame(
-            self.party_encoder.transform(df[["Party Affiliation"]]),
-            columns=self.feature_names["Party Affiliation"],
+            self.party_encoder.transform(df[["Party_Affiliation"]]),
+            columns=self.feature_names["Party_Affiliation"],
             index=df.index,
         )
 

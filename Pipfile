@@ -10,14 +10,16 @@ matplotlib = "*"
 seaborn = "*"
 scikit-learn = "*"
 scipy = "*"
-flask = "*"
 gunicorn = "*"
 nltk = "*"
 tqdm = "*"
 xgboost = "*"
+flask = "*"
+pydantic = "*"
 
 [dev-packages]
 jupyterlab = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.12"
