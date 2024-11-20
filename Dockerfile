@@ -13,8 +13,14 @@ RUN pip install pipenv
 # Install dependencies
 RUN pipenv install --deploy --system
 
-# Copy model and inference endpoint
-COPY ./src/predict.py /app
-COPY ./models/model.pickle /app
+# Copy the src directory and models directory
+COPY ./src /app/src
+COPY ./models /app/models
+# Add src directory to PYTHONPATH (ensures common_feature imports work)
+ENV PYTHONPATH="/app/src:$PYTHONPATH"
+
+# Expose the Flask app port
+EXPOSE 5042
+
 # Command to run the application
-CMD ["pipenv", "run", "gunicorn", "--bind", "0.0.0.0:5042", "app:app"]
+CMD ["pipenv", "run", "gunicorn", "--bind", "0.0.0.0:5042", "src.predict:app"]

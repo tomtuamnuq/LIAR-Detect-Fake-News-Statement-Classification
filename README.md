@@ -123,6 +123,38 @@ pytest tests
 Make sure that the trained model files (`feature_engineer.pkl` and `xgboost_model.pkl`) exist in the `models` directory before running the tests.
 
 ---
+### **Running the Application in a Docker Container**
+
+Follow these steps to build, run, and test the Flask application using Docker:
+
+#### **Step 1: Build the Docker Image**
+Ensure you are in the project root directory and run the following command to build the Docker image:
+```bash
+docker build -t liar-detect-app .
+```
+
+#### **Step 2: Run the Docker Container**
+Start the container and expose it on port `5042`:
+```bash
+docker run -p 5042:5042 liar-detect-app
+```
+
+The application will now be accessible at `http://127.0.0.1:5042`.
+
+#### **Step 3: Test the Flask API**
+You can test the `/predict` endpoint using a test JSON file. For example, to test with `test_single_false.json`, run:
+```bash
+curl -X POST -H "Content-Type: application/json" -d @tests/test_single_false.json http://127.0.0.1:5042/predict
+```
+
+The API should respond with a JSON object containing the predicted label. For example:
+```json
+{
+    "predicted_label": "pants-fire",
+    "true_label": "pants-fire",
+    "correct": true
+}
+```
 
 ## **Project Structure**
 
