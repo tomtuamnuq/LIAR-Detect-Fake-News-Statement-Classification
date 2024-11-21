@@ -53,10 +53,16 @@ The dataset is automatically downloaded at the start of the Jupyter Notebook.
    - Assess performance on the test dataset.
    - Generate classification reports and visualize confusion matrices.
 
-4. **Deployment**:
-   - Deploy the model as a web service using Flask.
-   - Containerize the service using Docker for portability.
-   - Optionally deploy the service to the cloud for public access.
+4. **Containerization**:
+
+   - Package the Flask web service into a Docker container for portability.
+   - Push the container image to Amazon Elastic Container Registry (ECR) for centralized storage.
+
+5. **Cloud Deployment**:
+
+   - Deploy the containerized service to AWS ECS Fargate for scalable and serverless hosting.
+   - Leverage spot instances for cost efficiency.
+   - Detailed deployment instructions can be found in the [aws_ecs_deployment](aws_ecs_deployment/README.md) directory subproject's README.
 
 ---
 
@@ -84,16 +90,19 @@ The dataset is automatically downloaded at the start of the Jupyter Notebook.
    ```
 
 3. Activate the Pipenv shell in the project root:
+
    ```bash
    pipenv shell
    ```
 
 4. Launch the Jupyter Notebook (if needed) with the correct working directory:
+
    ```bash
    jupyter lab --notebook-dir=notebooks
    ```
 
 5. Execute at least the first cell of the Jupyter Notebook to load the dataset into the `data` directory.
+
 ---
 
 ### **Training the Model**
@@ -101,11 +110,13 @@ The dataset is automatically downloaded at the start of the Jupyter Notebook.
 To train the model, use the `train.py` script located in the `src` directory. This will preprocess the data, train the model, and save the required pickle files (`feature_engineer.pkl` and `xgboost_model.pkl`) in the `models` directory. Ensure that the `train.tsv` and `test.tsv` files exist in the `data` directory before training!
 
 Run the training script:
+
 ```bash
 python src/train.py
 ```
 
 Once complete, the `models/` directory will contain the following:
+
 - `feature_engineer.pkl`: The pickled feature engineering pipeline.
 - `xgboost_model.pkl`: The trained XGBoost model.
 
@@ -116,6 +127,7 @@ Once complete, the `models/` directory will contain the following:
 To test the trained model inference implementation, use `pytest` to run the tests in the `tests` directory. These tests verify model inference, schema validation, and the prediction pipeline.
 
 Run the tests:
+
 ```bash
 pytest tests
 ```
@@ -123,18 +135,23 @@ pytest tests
 Make sure that the trained model files (`feature_engineer.pkl` and `xgboost_model.pkl`) exist in the `models` directory before running the tests.
 
 ---
+
 ### **Running the Application in a Docker Container**
 
 Follow these steps to build, run, and test the Flask application using Docker:
 
 #### **Step 1: Build the Docker Image**
+
 Ensure you are in the project root directory and run the following command to build the Docker image:
+
 ```bash
 docker build -t liar-detect-app .
 ```
 
 #### **Step 2: Run the Docker Container**
+
 Start the container and expose it on port `5042`:
+
 ```bash
 docker run -p 5042:5042 liar-detect-app
 ```
@@ -142,46 +159,60 @@ docker run -p 5042:5042 liar-detect-app
 The application will now be accessible at `http://127.0.0.1:5042`.
 
 #### **Step 3: Test the Flask API**
+
 You can test the `/predict` endpoint using a test JSON file. For example, to test with `test_single_false.json`, run:
+
 ```bash
 curl -X POST -H "Content-Type: application/json" -d @tests/test_single_false.json http://127.0.0.1:5042/predict
 ```
 
 The API should respond with a JSON object containing the predicted label. For example:
+
 ```json
 {
-    "predicted_label": "pants-fire",
-    "true_label": "pants-fire",
-    "correct": true
+  "predicted_label": "pants-fire",
+  "true_label": "pants-fire",
+  "correct": true
 }
 ```
+
 ### **Using the AWS CLI for Docker Image Management**
 
 This subsection explains how to set up the AWS CLI on Arch Linux, push the Docker image to Amazon ECR Public, and retrieve the image locally.
 
 #### **Step 1: Install the AWS CLI**
+
 On Arch Linux, you can install the AWS CLI using the `aws-cli` package:
+
 ```bash
 yay -S aws-cli
 ```
 
 #### **Step 2: Configure the AWS CLI**
+
 Set up the AWS CLI with your credentials and default region:
+
 ```bash
 aws configure
 ```
+
 You will be prompted to enter:
+
 - **AWS Access Key ID**
 - **AWS Secret Access Key**
 
 Ensure that your AWS credentials are valid and the required permissions are assigned to your user account for ECR Public operations.
 
 #### **Step 3: Upload the Docker Image**
+
 Use the provided `upload_to_ecr.sh` script to push the Docker image to Amazon ECR Public:
+
 ```bash
 ./upload_to_ecr.sh
 ```
+
 Ensure that the `upload_to_ecr.sh` script is executable:
+
 ```bash
 chmod +x upload_to_ecr.sh
 ```
@@ -189,12 +220,15 @@ chmod +x upload_to_ecr.sh
 The image is publicly available and does not require authentication for pulling.
 
 #### **Step 4: Retrieve the Docker Image**
+
 To pull the Docker image from Amazon ECR Public to your local Docker installation, use the following command:
+
 ```bash
 docker pull public.ecr.aws/t8q6o3x2/tuamnuq-liar-detect-app:latest
 ```
 
 The image will now be available locally and can be verified using:
+
 ```bash
 docker images
 ```
@@ -225,6 +259,8 @@ LIAR-Detect/
 │   ├── test_single_false.json  # Test input JSON with false label
 │   ├── test_single_mtrue.json  # Test input JSON with mostly-true label
 │
+├── aws_ecs_deployment/ # CDK subproject for ECS Fargate deployment
+├
 ├── Dockerfile           # Docker configuration
 ├── Pipfile              # Dependency management using Pipenv
 ├── Pipfile.lock         # Lockfile for reproducibility
